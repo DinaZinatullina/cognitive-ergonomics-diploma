@@ -14,7 +14,9 @@
             <a href="/">Главная</a>
             {% if user.is_authenticated %}
                 <span class="user-info">{{ user.username }}</span>
-                <a href="/admin/">Админка</a>
+                <a href="/logout/">Выйти</a>
+            {% else %}
+                <a href="/login/">Войти</a>
             {% endif %}
         </nav>
     </header>
