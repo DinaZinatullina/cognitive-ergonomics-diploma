@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Рабочее место оператора{% endblock %}
+
+{% block content %}
+<div class="dashboard">
+    <h1>Рабочее место оператора</h1>
+
+    <div class="panels">
+        <section class="panel">
+            <h2>Показатели датчиков</h2>
+            <ul class="sensor-list">
+                <li><span>Температура</span><strong>78 °C</strong></li>
+                <li><span>Давление</span><strong>2.4 атм</strong></li>
+                <li><span>Расход</span><strong>120 л/мин</strong></li>
+            </ul>
+        </section>
+
+        <section class="panel">
+            <h2>Статус системы</h2>
+            <p class="status-ok">Все параметры в норме</p>
+        </section>
+
+        <section class="panel">
+            <h2>Лог событий</h2>
+            <ul class="event-log">
+                <li>[10:23] Система запущена</li>
+                <li>[10:25] Проверка датчиков завершена</li>
+                <li>[10:27] Показатели в норме</li>
+            </ul>
+        </section>
+
+        <section class="panel">
+            <h2>Действия</h2>
+            <div class="actions">
+                <button type="button">Запустить процесс</button>
+                <button type="button">Остановить</button>
+                <button type="button">Перезапустить</button>
+            </div>
+        </section>
+    </div>
+</div>
+{% endblock %}
