@@ -7,7 +7,7 @@
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
 </head>
-<body>
+<body data-csrf-token="{{ csrf_token }}">
     <header class="top-bar">
         <div class="logo">Система когнитивной эргономики</div>
         <nav class="top-nav">
@@ -30,7 +30,7 @@
     </main>
 
     <footer class="bottom-bar">
-        <span>ВКР &copy; 2026</span>
+        <span>ВКР &copy; 2027</span>
     </footer>
 
     <script src="{% static 'js/main.js' %}"></script>
