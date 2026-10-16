@@ -112,4 +112,60 @@
         state.lastActionAt = Date.now();
     });
 
+        // ============================================================
+    // Получение и применение правил адаптации
+    // ============================================================
+    function fetchAdaptation() {
+        fetch('/api/adaptation/', {
+            method: 'GET',
+            headers: {
+                'X-CSRFToken': csrfToken,
+            },
+        })
+            .then(function (r) { return r.json(); })
+            .then(function (data) {
+                if (data.actions && data.actions.length > 0) {
+                    data.actions.forEach(function (action) {
+                        applyAdaptationAction(action);
+                    });
+                }
+            })
+            .catch(function (err) {
+                console.warn('Не удалось получить адаптацию:', err);
+            });
+    }
+
+    // Применение конкретного действия к интерфейсу
+    function applyAdaptationAction(action) {
+        if (action === 'simplify_ui') {
+            document.body.classList.add('simplified');
+        } else if (action === 'show_hint') {
+            showHint('Вы часто ошибаетесь. Проверьте, запущена ли система, прежде чем её останавливать.');
+        } else if (action === 'increase_font') {
+            document.body.classList.add('large-font');
+        }
+    }
+
+    // Показ подсказки сверху страницы
+    function showHint(text) {
+        // Удаляем предыдущую подсказку, если она есть
+        const existing = document.querySelector('.hint-bar');
+        if (existing) {
+            existing.remove();
+        }
+
+        const hint = document.createElement('div');
+        hint.className = 'hint-bar';
+        hint.textContent = text;
+        document.body.insertBefore(hint, document.body.firstChild);
+
+        // Убираем через 15 секунд
+        setTimeout(function () {
+            hint.remove();
+        }, 15000);
+    }
+
+    // Опрашиваем сервер каждые 5 секунд
+    setInterval(fetchAdaptation, 5000);
+
 })();

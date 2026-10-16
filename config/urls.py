@@ -4,7 +4,7 @@ from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.urls import path
 
-from core.views import dashboard, log_event
+from core.views import dashboard, log_event, get_adaptation
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -12,6 +12,7 @@ urlpatterns = [
     path('logout/', auth_views.LogoutView.as_view(next_page='login'), name='logout'),
     path('api/event/', log_event, name='log_event'),
     path('', dashboard, name='dashboard'),
+    path('api/adaptation/', get_adaptation, name='get_adaptation'),
 ]
 
 # В режиме разработки Django сам отдаёт статику
