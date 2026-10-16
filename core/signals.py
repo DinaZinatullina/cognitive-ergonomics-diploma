@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-from .models import Role, UserProfile, Session
+from .models import Role, UserProfile, Session, Event
 
 
 @receiver(post_save, sender=User)
@@ -43,3 +43,15 @@ def on_user_logged_out(sender, request, user, **kwargs):
         session.is_active = False
         session.ended_at = timezone.now()
         session.save(update_fields=['is_active', 'ended_at'])
+
+from django.db.models.signals import post_save
+
+from .metrics import recalculate_session_metrics
+from .models import Event
+
+
+@receiver(post_save, sender=Event)
+def on_event_created(sender, instance, created, **kwargs):
+    """При создании нового события — пересчитываем метрики сессии."""
+    if created:
+        recalculate_session_metrics(instance.session)
