@@ -43,4 +43,8 @@ def recalculate_session_metrics(session):
     metrics.cognitive_load_score = score
     metrics.save()
 
+    apply_adaptation_rules(session)
+
     return metrics
+
+from .adaptation import apply_adaptation_rules
