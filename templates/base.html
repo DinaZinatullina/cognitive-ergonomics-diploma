@@ -14,7 +14,10 @@
             <a href="/">Главная</a>
             {% if user.is_authenticated %}
                 <span class="user-info">{{ user.username }}</span>
-                <a href="/logout/">Выйти</a>
+                <form action="/logout/" method="post" class="logout-form">
+                    {% csrf_token %}
+                    <button type="submit" class="logout-button">Выйти</button>
+                </form>
             {% else %}
                 <a href="/login/">Войти</a>
             {% endif %}

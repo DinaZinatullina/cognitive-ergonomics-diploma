@@ -34,6 +34,25 @@ body {
     font-size: 14px;
 }
 
+.logout-form {
+    display: inline;
+    margin-left: 16px;
+}
+
+.logout-button {
+    background: none;
+    border: none;
+    color: #cbd5e1;
+    font-size: 14px;
+    cursor: pointer;
+    font-family: inherit;
+    padding: 0;
+}
+
+.logout-button:hover {
+    color: #ffffff;
+}
+
 .top-nav a:hover {
     color: #ffffff;
 }
