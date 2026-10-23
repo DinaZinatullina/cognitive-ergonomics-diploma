@@ -8,12 +8,24 @@ from django.views.decorators.http import require_POST
 from .models import Event, Session
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
+from .validation import validate_text
 
 
 @login_required
 def dashboard(request):
-    """Главный экран оператора. Доступен только авторизованным."""
-    return render(request, 'operator/dashboard.html')
+    """Главный экран оператора."""
+    # Тестовый текст, который мы выводим в лог
+    test_event_text = "Осуществление процесса функционирования системы является важным этапом."
+    
+    # Валидируем его
+    validation_result = validate_text(test_event_text)
+
+    context = {
+        'validation': validation_result,
+        'log_text': test_event_text,
+    }
+    return render(request, 'operator/dashboard.html', context)
+
 
 @require_POST
 @login_required

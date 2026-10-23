@@ -25,10 +25,20 @@
         <section class="panel">
             <h2>Лог событий</h2>
             <ul class="event-log">
-                <li>[10:23] Система запущена</li>
+                <li>{{ log_text }}</li>
                 <li>[10:25] Проверка датчиков завершена</li>
                 <li>[10:27] Показатели в норме</li>
             </ul>
+            {% if validation.details.heavy_words %}
+            <div class="validation-warning">
+                <strong>Внимание! Текст содержит сложные слова:</strong>
+                <ul>
+                    {% for item in validation.heavy_words %}
+                    <li>«{{ item.word }}» — лучше заменить на «{{ item.suggestion }}»</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
         </section>
 
         <section class="panel">
