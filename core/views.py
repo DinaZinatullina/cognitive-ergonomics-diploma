@@ -79,3 +79,19 @@ def get_adaptation(request):
 
     actions = [log.rule.action for log in logs]
     return JsonResponse({'actions': actions})
+
+@login_required
+def validator_view(request):
+    """Страница для проверки произвольного текста."""
+    result = None
+    text = ""
+
+    if request.method == 'POST':
+        text = request.POST.get('text', '')
+        if text:
+            result = validate_text(text)
+
+    return render(request, 'operator/validator.html', {
+        'result': result,
+        'text': text,
+    })

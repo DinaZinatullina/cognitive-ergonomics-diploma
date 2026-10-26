@@ -50,11 +50,13 @@ def validate_text(text):
     
     final_score = round(0.6 * words_score + 0.4 * sentences_score, 2)
 
+    is_passed = (len(found_words)==0) and (len(long_sentences)==0)
     return {
         "score": final_score,
-        "is_passed": final_score < 0.5,  # Если меньше 0.5 — текст хороший
+        "is_passed": is_passed,
         "details": {
             "heavy_words": found_words,
             "long_sentences": long_sentences,
         }
     }
+    

@@ -12,6 +12,7 @@
         <div class="logo">Система когнитивной эргономики</div>
         <nav class="top-nav">
             <a href="/">Главная</a>
+            <a href="/validator/">Валидатор</a>
             {% if user.is_authenticated %}
                 <span class="user-info">{{ user.username }}</span>
                 <form action="/logout/" method="post" class="logout-form">

@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %}Валидатор контента{% endblock %}
+
+{% block content %}
+<div class="validator-page">
+    <h1>Валидатор контента</h1>
+    <p style="color: #64748b; margin-bottom: 20px;">Введите текст, чтобы проверить его на когнитивную сложность.</p>
+
+    <form method="post" class="validator-form">
+        {% csrf_token %}
+        <textarea name="text" rows="6" placeholder="Введите текст здесь...">{{ text }}</textarea>
+        <button type="submit">Проверить текст</button>
+    </form>
+
+    {% if result %}
+    <div class="validation-result {% if result.is_passed %}result-success{% else %}result-warning{% endif %}">
+        <h2>Результат проверки</h2>
+        <p>Оценка сложности: <strong>{{ result.score }}</strong> (от 0 до 1, где 1 — очень сложно)</p>
+        
+        {% if result.is_passed %}
+            <p>✅ Текст понятный. Когнитивная нагрузка в норме.</p>
+        {% else %}
+            <p>⚠️ Текст перегружен. Рекомендуется упростить.</p>
+        {% endif %}
+
+        {% if result.details.heavy_words %}
+        <h3>Найденные сложные слова:</h3>
+        <ul>
+            {% for item in result.details.heavy_words %}
+            <li>«{{ item.word }}» — лучше заменить на «{{ item.suggestion }}»</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+        {% if result.details.long_sentences %}
+        <h3>Слишком длинные предложения (больше 20 слов):</h3>
+        <ul>
+            {% for item in result.details.long_sentences %}
+            <li>{{ item.text }} (слов: {{ item.word_count }})</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

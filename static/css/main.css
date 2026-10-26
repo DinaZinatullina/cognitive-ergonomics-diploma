@@ -254,3 +254,71 @@ body.large-font .hint-bar {
 .validation-warning li {
     margin-bottom: 4px;
 }
+
+.validator-page {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.validator-form textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 14px;
+    resize: vertical;
+    margin-bottom: 12px;
+}
+
+.validator-form button {
+    background: #2563eb;
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 20px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.validator-form button:hover {
+    background: #1d4ed8;
+}
+
+.validation-result {
+    margin-top: 24px;
+    padding: 16px;
+    border-radius: 8px;
+}
+
+.result-success {
+    background: #dcfce7;
+    border: 1px solid #bbf7d0;
+    color: #166534;
+}
+
+.result-warning {
+    background: #fef3c7;
+    border: 1px solid #fde68a;
+    color: #78350f;
+}
+
+.validation-result h2 {
+    font-size: 18px;
+    margin-bottom: 8px;
+}
+
+.validation-result h3 {
+    font-size: 15px;
+    margin-top: 12px;
+    margin-bottom: 6px;
+}
+
+.validation-result ul {
+    margin-left: 20px;
+    font-size: 14px;
+}
+
+.validation-result li {
+    margin-bottom: 4px;
+}
