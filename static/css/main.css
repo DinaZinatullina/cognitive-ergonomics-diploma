@@ -322,3 +322,26 @@ body.large-font .hint-bar {
 .validation-result li {
     margin-bottom: 4px;
 }
+
+.text-danger {
+    color: #dc2626 !important;
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.6; }
+    100% { opacity: 1; }
+}
+
+.alarm-panel {
+    background: #fee2e2;
+    border: 2px solid #dc2626;
+    color: #991b1b;
+    padding: 12px;
+    margin-top: 12px;
+    border-radius: 6px;
+    text-align: center;
+    font-weight: bold;
+    animation: pulse 1.5s infinite;
+}

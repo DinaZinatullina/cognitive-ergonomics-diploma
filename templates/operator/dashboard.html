@@ -8,13 +8,25 @@
     <h1>Рабочее место оператора</h1>
 
     <div class="panels">
-        <section class="panel">
+        <section class="panel" id="sensor-panel">
             <h2>Показатели датчиков</h2>
             <ul class="sensor-list">
-                <li><span>Температура</span><strong>78 °C</strong></li>
-                <li><span>Давление</span><strong>2.4 атм</strong></li>
-                <li><span>Расход</span><strong>120 л/мин</strong></li>
+                <li>
+                    <span>Температура</span>
+                    <strong id="val-temp">--</strong>
+                </li>
+                <li>
+                    <span>Давление</span>
+                    <strong id="val-pressure">--</strong>
+                </li>
+                <li>
+                    <span>Расход</span>
+                    <strong id="val-level">--</strong>
+                </li>
             </ul>
+            <div id="alarm-panel" class="alarm-panel" style="display: none;">
+                <strong>ВНИМАНИЕ! КРИТИЧЕСКИЕ ПАРАМЕТРЫ!</strong>
+            </div>
         </section>
 
         <section class="panel">

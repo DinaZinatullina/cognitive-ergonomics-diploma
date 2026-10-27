@@ -4,8 +4,8 @@ from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.urls import path
 
-from core.views import dashboard, log_event, get_adaptation
-from core.views import dashboard, log_event, get_adaptation, validator_view
+from core.views import dashboard, log_event, get_adaptation, validator_view, api_equipment_status
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -15,6 +15,7 @@ urlpatterns = [
     path('', dashboard, name='dashboard'),
     path('api/adaptation/', get_adaptation, name='get_adaptation'),
     path('validator/', validator_view, name='validator'),
+    path('api/equipment/', api_equipment_status, name='api_equipment'),
 ]
 
 # В режиме разработки Django сам отдаёт статику

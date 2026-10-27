@@ -168,4 +168,58 @@
     // Опрашиваем сервер каждые 5 секунд
     setInterval(fetchAdaptation, 5000);
 
+        // ============================================================
+    // Опрос состояния установки
+    // ============================================================
+    function fetchEquipmentStatus() {
+        fetch('/api/equipment/', {
+            method: 'GET',
+        })
+            .then(r => r.json())
+            .then(data => {
+                // Обновляем цифры на экране
+                const tempEl = document.getElementById('val-temp');
+                const pressureEl = document.getElementById('val-pressure');
+                const levelEl = document.getElementById('val-level');
+                const alarmEl = document.getElementById('alarm-panel');
+
+                if (!tempEl) return; // Если мы не на странице оператора
+
+                tempEl.textContent = data.temperature + ' °C';
+                pressureEl.textContent = data.pressure + ' атм';
+                levelEl.textContent = data.tank_level + ' %';
+
+                // Подсветка критических значений
+                if (data.is_temperature_critical) {
+                    tempEl.classList.add('text-danger');
+                } else {
+                    tempEl.classList.remove('text-danger');
+                }
+
+                if (data.is_pressure_critical) {
+                    pressureEl.classList.add('text-danger');
+                } else {
+                    pressureEl.classList.remove('text-danger');
+                }
+
+                // Показ аварийного баннера
+                if (data.is_temperature_critical || data.is_pressure_critical) {
+                    alarmEl.style.display = 'block';
+                    
+                    // Отправляем событие об аварии, чтобы это влияло на когнитивную нагрузку
+                    if (!window._alarmSent) {
+                        sendEvent('alert', 'критическое_отклонение', null);
+                        window._alarmSent = true;
+                    }
+                } else {
+                    alarmEl.style.display = 'none';
+                    window._alarmSent = false;
+                }
+            })
+            .catch(err => console.warn('Ошибка получения данных установки:', err));
+    }
+
+    // Запускаем опрос каждые 2 секунды  
+    setInterval(fetchEquipmentStatus, 2000);
+    fetchEquipmentStatus();
 })();

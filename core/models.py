@@ -154,3 +154,23 @@ class AdaptationLog(models.Model):
 
     def __str__(self):
         return f"{self.rule.name} @ {self.triggered_at}"
+
+class EquipmentState(models.Model):
+    """Текущее состояние технологической установки."""
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    # Температура (норма 70-85, авария > 95)
+    temperature = models.FloatField(default=78.0)
+    
+    # Давление (норма 2.0-2.5, авария > 3.0)
+    pressure = models.FloatField(default=2.4)
+    
+    # Уровень жидкости в резервуаре (норма 40-60%)
+    tank_level = models.FloatField(default=50.0)
+    
+    # Флаги аварий
+    is_temperature_critical = models.BooleanField(default=False)
+    is_pressure_critical = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"Т: {self.temperature}°C, Д: {self.pressure} атм, Уровень: {self.tank_level}%"

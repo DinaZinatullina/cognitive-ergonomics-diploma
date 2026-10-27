@@ -95,3 +95,20 @@ def validator_view(request):
         'result': result,
         'text': text,
     })
+
+from .models import EquipmentState
+from .simulator import tick_equipment
+
+
+@login_required
+def api_equipment_status(request):
+    """Возвращает текущее состояние установки и делает шаг симуляции."""
+    state = tick_equipment()
+    
+    return JsonResponse({
+        'temperature': round(state.temperature, 1),
+        'pressure': round(state.pressure, 2),
+        'tank_level': round(state.tank_level, 1),
+        'is_temperature_critical': state.is_temperature_critical,
+        'is_pressure_critical': state.is_pressure_critical,
+    })
