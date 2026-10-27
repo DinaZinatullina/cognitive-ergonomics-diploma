@@ -4,63 +4,99 @@
 {% block title %}Рабочее место оператора{% endblock %}
 
 {% block content %}
-<div class="dashboard">
-    <h1>Рабочее место оператора</h1>
-
-    <div class="panels">
-        <section class="panel" id="sensor-panel">
-            <h2>Показатели датчиков</h2>
-            <ul class="sensor-list">
-                <li>
-                    <span>Температура</span>
-                    <strong id="val-temp">--</strong>
-                </li>
-                <li>
-                    <span>Давление</span>
-                    <strong id="val-pressure">--</strong>
-                </li>
-                <li>
-                    <span>Расход</span>
-                    <strong id="val-level">--</strong>
-                </li>
-            </ul>
-            <div id="alarm-panel" class="alarm-panel" style="display: none;">
-                <strong>ВНИМАНИЕ! КРИТИЧЕСКИЕ ПАРАМЕТРЫ!</strong>
-            </div>
-        </section>
-
-        <section class="panel">
-            <h2>Статус системы</h2>
-            <p class="status-ok">Все параметры в норме</p>
-        </section>
-
-        <section class="panel">
-            <h2>Лог событий</h2>
-            <ul class="event-log">
-                <li>{{ log_text }}</li>
-                <li>[10:25] Проверка датчиков завершена</li>
-                <li>[10:27] Показатели в норме</li>
-            </ul>
-            {% if validation.details.heavy_words %}
-            <div class="validation-warning">
-                <strong>Внимание! Текст содержит сложные слова:</strong>
-                <ul>
-                    {% for item in validation.heavy_words %}
-                    <li>«{{ item.word }}» — лучше заменить на «{{ item.suggestion }}»</li>
-                    {% endfor %}
-                </ul>
-            </div>
-            {% endif %}
-        </section>
-
-        <section class="panel">
-            <h2>Действия</h2>
-            <div class="actions">
-                <button type="button" data-action="start">Запустить процесс</button>
-                <button type="button" data-action="stop">Остановить</button>
-                <button type="button" data-action="restart">Перезапустить</button>
-            </div>
-        </section>
+<div class="scada-dashboard">
+    
+    <!-- Верхняя строка статуса -->
+    <div class="scada-header">
+        <div class="scada-title">Пульт управления: Установка №1</div>
+        <div class="scada-status" id="system-status">
+            <span class="status-dot"></span> СИСТЕМА В НОРМЕ
+        </div>
     </div>
+
+    <div class="scada-grid">
+        
+        <!-- Левая колонка: Мнемосхема и управление -->
+        <div class="scada-col-left">
+            <!-- Мнемосхема -->
+            <div class="scada-panel mnemonic-panel">
+                <div class="panel-title">Мнемосхема процесса</div>
+                
+                <div class="mnemonic">
+                    <!-- Резервуар -->
+                    <div class="tank">
+                        <div class="tank-fluid" id="tank-fluid"></div>
+                        <div class="tank-label">Резервуар<br><span id="mnemonic-level">50%</span></div>
+                    </div>
+                    
+                    <!-- Трубы и насос -->
+                    <div class="pipes">
+                        <div class="pipe-line"></div>
+                        <div class="pump" id="pump-icon">
+                            <div class="pump-blades"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Реактор -->
+                    <div class="reactor" id="reactor-icon">
+                        <div class="reactor-core"></div>
+                        <div class="tank-label">Реактор<br><span id="mnemonic-temp">78°C</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Блок управления -->
+            <div class="scada-panel control-panel">
+                <div class="panel-title">Органы управления</div>
+                <div class="control-buttons">
+                    <button class="scada-btn btn-coolant" data-action="coolant">Подать хладагент</button>
+                    <button class="scada-btn btn-vent" data-action="vent">Сбросить давление</button>
+                    <button class="scada-btn btn-fill" data-action="fill">Долить жидкость</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Правая колонка: Приборы и Лог -->
+        <div class="scada-col-right">
+            <!-- Приборы -->
+            <div class="scada-panel instruments-panel">
+                <div class="panel-title">Показания датчиков</div>
+                
+                <div class="gauges">
+                    <!-- Температура -->
+                    <div class="gauge-container">
+                        <div class="gauge-value" id="val-temp">78.0</div>
+                        <div class="gauge-unit">°C</div>
+                        <div class="gauge-label">Температура</div>
+                        <div class="gauge-bar"><div class="gauge-fill" id="bar-temp"></div></div>
+                    </div>
+                    
+                    <!-- Давление -->
+                    <div class="gauge-container">
+                        <div class="gauge-value" id="val-pressure">2.40</div>
+                        <div class="gauge-unit">атм</div>
+                        <div class="gauge-label">Давление</div>
+                        <div class="gauge-bar"><div class="gauge-fill" id="bar-pressure"></div></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Лог событий -->
+            <div class="scada-panel log-panel">
+                <div class="panel-title">Журнал событий</div>
+                <div class="scada-log" id="scada-log">
+                    <div class="log-entry system">[10:00] Система инициализирована</div>
+                    <div class="log-entry info">[10:01] Мониторинг запущен</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Глобальный алерт -->
+    <div id="alarm-panel" class="scada-alarm" style="display: none;">
+        <div class="alarm-icon">⚠️</div>
+        <div class="alarm-text">КРИТИЧЕСКОЕ ОТКЛОНЕНИЕ ПАРАМЕТРОВ! ТРЕБУЕТСЯ ВМЕШАТЕЛЬСТВО!</div>
+    </div>
+
 </div>
 {% endblock %}

@@ -1,3 +1,6 @@
+/* ============================================================
+   БАЗОВЫЕ СТИЛИ (Пульт управления)
+   ============================================================ */
 * {
     margin: 0;
     padding: 0;
@@ -5,343 +8,288 @@
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    background: #f4f6f8;
-    color: #1f2937;
+    font-family: 'Courier New', Courier, monospace; /* Технический шрифт */
+    background: #0f172a; /* Темно-синий фон */
+    color: #cbd5e1;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
 }
 
+/* Верхнее меню (оставляем из base.html, но красим) */
 .top-bar {
+    background: #1e293b;
+    border-bottom: 2px solid #334155;
+    color: #f8fafc;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.logo { font-weight: bold; font-size: 16px; letter-spacing: 1px; }
+.top-nav a, .logout-button { color: #94a3b8; text-decoration: none; font-size: 13px; margin-left: 15px; }
+.top-nav a:hover, .logout-button:hover { color: #f8fafc; }
+.logout-form { display: inline; }
+.logout-button { background: none; border: none; cursor: pointer; font-family: inherit; }
+
+.content { flex: 1; padding: 16px; }
+
+/* ============================================================
+   SCADA ДАШБОРД
+   ============================================================ */
+.scada-dashboard {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* Заголовок панели */
+.scada-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     background: #1e293b;
-    color: #ffffff;
-    padding: 12px 24px;
+    border: 1px solid #334155;
+    padding: 12px 20px;
+    border-radius: 4px;
+}
+.scada-title { font-size: 16px; font-weight: bold; color: #f1f5f9; text-transform: uppercase; letter-spacing: 1px; }
+.scada-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: bold;
+    color: #4ade80; /* Зеленый */
+}
+.status-dot {
+    width: 10px;
+    height: 10px;
+    background: #4ade80;
+    border-radius: 50%;
+    box-shadow: 0 0 8px #4ade80;
 }
 
-.logo {
-    font-weight: 600;
-    font-size: 16px;
-}
-
-.top-nav a {
-    color: #cbd5e1;
-    text-decoration: none;
-    margin-left: 16px;
-    font-size: 14px;
-}
-
-.logout-form {
-    display: inline;
-    margin-left: 16px;
-}
-
-.logout-button {
-    background: none;
-    border: none;
-    color: #cbd5e1;
-    font-size: 14px;
-    cursor: pointer;
-    font-family: inherit;
-    padding: 0;
-}
-
-.logout-button:hover {
-    color: #ffffff;
-}
-
-.top-nav a:hover {
-    color: #ffffff;
-}
-
-.user-info {
-    color: #94a3b8;
-    font-size: 14px;
-    margin-left: 16px;
-}
-
-.content {
-    flex: 1;
-    padding: 24px;
-}
-
-.dashboard h1 {
-    font-size: 22px;
-    margin-bottom: 20px;
-}
-
-.panels {
+/* Сетка */
+.scada-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 2fr 1fr;
     gap: 16px;
 }
 
-.panel {
-    background: #ffffff;
-    border-radius: 8px;
+.scada-col-left, .scada-col-right { display: flex; flex-direction: column; gap: 16px; }
+
+/* Панели */
+.scada-panel {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 4px;
     padding: 16px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-}
-
-.panel h2 {
-    font-size: 16px;
-    margin-bottom: 12px;
-    color: #334155;
-}
-
-.sensor-list li,
-.event-log li {
-    list-style: none;
-    padding: 6px 0;
-    border-bottom: 1px solid #e2e8f0;
-    font-size: 14px;
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
 }
-
-.event-log li {
-    display: block;
-    color: #475569;
-}
-
-.status-ok {
-    color: #059669;
-    font-weight: 500;
-}
-
-.actions button {
-    background: #2563eb;
-    color: #ffffff;
-    border: none;
-    border-radius: 6px;
-    padding: 8px 14px;
-    font-size: 14px;
-    cursor: pointer;
-    margin-right: 8px;
-}
-
-.actions button:hover {
-    background: #1d4ed8;
-}
-
-.bottom-bar {
-    background: #e2e8f0;
+.panel-title {
+    font-size: 12px;
+    text-transform: uppercase;
     color: #64748b;
+    margin-bottom: 16px;
+    border-bottom: 1px solid #334155;
+    padding-bottom: 8px;
+    letter-spacing: 1px;
+}
+
+/* Мнемосхема */
+.mnemonic-panel { flex: 1; min-height: 300px; }
+.mnemonic {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    height: 100%;
+    padding: 20px;
+    background: #0f172a;
+    border-radius: 4px;
+    border: 1px inset #334155;
+    position: relative;
+}
+
+/* Резервуар */
+.tank {
+    width: 100px;
+    height: 150px;
+    border: 3px solid #475569;
+    border-radius: 8px;
+    position: relative;
+    overflow: hidden;
+    background: #1e293b;
+}
+.tank-fluid {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 50%; /* Меняется через JS */
+    background: rgba(56, 189, 248, 0.4); /* Голубая вода */
+    border-top: 2px solid #38bdf8;
+    transition: height 0.5s ease;
+}
+.tank-label {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     text-align: center;
+    font-size: 12px;
+    font-weight: bold;
+    color: #f8fafc;
+    z-index: 10;
+    text-shadow: 1px 1px 2px #000;
+}
+
+/* Насос */
+.pipes { display: flex; align-items: center; }
+.pipe-line { width: 60px; height: 8px; background: #475569; }
+.pump {
+    width: 40px;
+    height: 40px;
+    border: 3px solid #475569;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #1e293b;
+}
+.pump-blades {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #94a3b8;
+    border-radius: 50%;
+    border-top-color: transparent;
+    animation: spin 1s linear infinite;
+}
+@keyframes spin { 100% { transform: rotate(360deg); } }
+
+/* Реактор */
+.reactor {
+    width: 120px;
+    height: 120px;
+    border: 3px solid #475569;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    background: #1e293b;
+    transition: box-shadow 0.3s;
+}
+.reactor-core {
+    width: 80px;
+    height: 80px;
+    background: #334155;
+    border-radius: 50%;
+    transition: background 0.3s;
+}
+
+/* Органы управления */
+.control-buttons { display: flex; gap: 12px; flex-wrap: wrap; }
+.scada-btn {
+    background: #334155;
+    border: 1px solid #475569;
+    color: #e2e8f0;
+    padding: 12px 20px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: bold;
+    border-radius: 4px;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.2s;
+}
+.scada-btn:hover { background: #475569; border-color: #64748b; }
+.scada-btn:active { transform: scale(0.98); }
+
+/* Приборы (Индикаторы) */
+.gauges { display: flex; gap: 20px; justify-content: space-around; }
+.gauge-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #0f172a;
+    border: 1px solid #334155;
+    padding: 16px;
+    border-radius: 8px;
+    width: 140px;
+}
+.gauge-value {
+    font-size: 32px;
+    font-weight: bold;
+    color: #38bdf8;
+    line-height: 1;
+}
+.gauge-unit { font-size: 14px; color: #64748b; margin-bottom: 8px; }
+.gauge-label { font-size: 12px; text-transform: uppercase; color: #94a3b8; margin-bottom: 12px; }
+
+/* Полоска заполнения */
+.gauge-bar {
+    width: 100%;
+    height: 8px;
+    background: #1e293b;
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid #334155;
+}
+.gauge-fill {
+    height: 100%;
+    width: 50%;
+    background: #38bdf8;
+    transition: width 0.5s ease, background 0.3s;
+}
+
+/* Журнал событий */
+.log-panel { flex: 1; min-height: 200px; }
+.scada-log {
+    flex: 1;
+    background: #0f172a;
+    border: 1px solid #334155;
     padding: 10px;
     font-size: 12px;
+    overflow-y: auto;
+    max-height: 200px;
+    font-family: monospace;
 }
+.log-entry { margin-bottom: 4px; }
+.log-entry.system { color: #94a3b8; }
+.log-entry.info { color: #38bdf8; }
+.log-entry.warning { color: #fbbf24; }
+.log-entry.danger { color: #ef4444; }
 
-.login-page {
-    max-width: 360px;
-    margin: 60px auto;
-    background: #ffffff;
-    padding: 24px;
-    border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-}
-
-.login-page h1 {
-    font-size: 20px;
-    margin-bottom: 20px;
-    text-align: center;
-}
-
-.login-form label {
-    display: block;
-    margin-bottom: 14px;
-    font-size: 14px;
-    color: #334155;
-}
-
-.login-form input {
-    width: 100%;
-    padding: 8px 10px;
-    margin-top: 6px;
-    border: 1px solid #cbd5e1;
-    border-radius: 6px;
-    font-size: 14px;
-}
-
-.login-form button {
-    width: 100%;
-    background: #2563eb;
-    color: #ffffff;
-    border: none;
-    border-radius: 6px;
-    padding: 10px;
-    font-size: 14px;
-    cursor: pointer;
-}
-
-.login-form button:hover {
-    background: #1d4ed8;
-}
-
-.error-message {
-    color: #dc2626;
-    text-align: center;
-    margin-bottom: 12px;
-    font-size: 14px;
-}
-
-/* Упрощённый интерфейс: скрываем панель "Лог событий" */
-body.simplified .panels .panel:nth-child(3) {
-    display: none;
-}
-
-body.simplified .panels {
-    grid-template-columns: 1fr;
-}
-
-/* Увеличенный шрифт: увеличиваем масштаб всего контента */
-body.large-font .content {
-    transform: scale(1.15);
-    transform-origin: top left;
-    width: 87%; /* компенсируем масштаб, чтобы не было горизонтальной прокрутки */
-}
-
-body.large-font .panel h2 {
-    font-size: 18px;
-}
-
-body.large-font .sensor-list li,
-body.large-font .event-log li,
-body.large-font .actions button {
-    font-size: 15px;
-}
-
-body.large-font .hint-bar {
-    font-size: 15px;
-}
-
-/* Подсказка сверху */
-.hint-bar {
-    background: #fbbf24;
-    color: #1f2937;
-    padding: 12px 24px;
-    font-size: 14px;
-    font-weight: 500;
-    text-align: center;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-}
-
-body.large-font .hint-bar {
-    font-size: 16px;
-}
-
-.validation-warning {
-    background: #fef3c7;
-    border-left: 4px solid #f59e0b;
-    padding: 12px;
-    margin-top: 16px;
-    font-size: 13px;
-    color: #78350f;
-}
-
-.validation-warning strong {
-    display: block;
-    margin-bottom: 8px;
-}
-
-.validation-warning ul {
-    margin-left: 16px;
-}
-
-.validation-warning li {
-    margin-bottom: 4px;
-}
-
-.validator-page {
-    max-width: 800px;
-    margin: 0 auto;
-}
-
-.validator-form textarea {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #cbd5e1;
-    border-radius: 6px;
-    font-family: inherit;
-    font-size: 14px;
-    resize: vertical;
-    margin-bottom: 12px;
-}
-
-.validator-form button {
-    background: #2563eb;
-    color: #ffffff;
-    border: none;
-    border-radius: 6px;
-    padding: 10px 20px;
-    font-size: 14px;
-    cursor: pointer;
-}
-
-.validator-form button:hover {
-    background: #1d4ed8;
-}
-
-.validation-result {
-    margin-top: 24px;
+/* Аварийный баннер */
+.scada-alarm {
+    background: #7f1d1d;
+    border: 2px solid #ef4444;
+    color: #fca5a5;
     padding: 16px;
-    border-radius: 8px;
-}
-
-.result-success {
-    background: #dcfce7;
-    border: 1px solid #bbf7d0;
-    color: #166534;
-}
-
-.result-warning {
-    background: #fef3c7;
-    border: 1px solid #fde68a;
-    color: #78350f;
-}
-
-.validation-result h2 {
-    font-size: 18px;
-    margin-bottom: 8px;
-}
-
-.validation-result h3 {
-    font-size: 15px;
-    margin-top: 12px;
-    margin-bottom: 6px;
-}
-
-.validation-result ul {
-    margin-left: 20px;
-    font-size: 14px;
-}
-
-.validation-result li {
-    margin-bottom: 4px;
-}
-
-.text-danger {
-    color: #dc2626 !important;
-    animation: pulse 1s infinite;
-}
-
-@keyframes pulse {
-    0% { opacity: 1; }
-    50% { opacity: 0.6; }
-    100% { opacity: 1; }
-}
-
-.alarm-panel {
-    background: #fee2e2;
-    border: 2px solid #dc2626;
-    color: #991b1b;
-    padding: 12px;
-    margin-top: 12px;
-    border-radius: 6px;
     text-align: center;
     font-weight: bold;
-    animation: pulse 1.5s infinite;
+    font-size: 16px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    animation: alarm-pulse 1s infinite;
 }
+@keyframes alarm-pulse {
+    0% { opacity: 1; box-shadow: 0 0 0 #ef4444; }
+    50% { opacity: 0.8; box-shadow: 0 0 20px #ef4444; }
+    100% { opacity: 1; box-shadow: 0 0 0 #ef4444; }
+}
+
+/* Состояния опасности */
+.danger-text { color: #ef4444 !important; text-shadow: 0 0 10px #ef4444; }
+.danger-bar { background: #ef4444 !important; }
+.reactor.danger .reactor-core { background: #ef4444; box-shadow: 0 0 30px #ef4444; }
+
+/* Скрываем старые стили логина и валидатора, чтобы не мешали (они у нас отдельно) */
