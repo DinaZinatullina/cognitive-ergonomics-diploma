@@ -10,6 +10,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from .validation import validate_text
 
+from .models import SessionMetrics, Event, Session
 
 @login_required
 def dashboard(request):
@@ -159,4 +160,25 @@ def api_equipment_control(request):
         'is_pressure_critical': state.is_pressure_critical,
         # Насос работает, если нет аварии и уровень жидкости больше 5%
         'is_pump_working': not (state.is_temperature_critical or state.is_pressure_critical) and state.tank_level > 5,
+    })
+
+@login_required
+def stats_view(request):
+    """Страница аналитики для исследователя."""
+    # Берем последнюю завершенную сессию
+    last_session = Session.objects.filter(is_active=False).order_by('-ended_at').first()
+    
+    metrics = None
+    events = []
+    
+    if last_session:
+        try:
+            metrics = last_session.sessionmetrics
+        except SessionMetrics.DoesNotExist:
+            pass
+        events = last_session.event_set.order_by('-timestamp')[:20]
+
+    return render(request, 'operator/stats.html', {
+        'metrics': metrics,
+        'events': events,
     })

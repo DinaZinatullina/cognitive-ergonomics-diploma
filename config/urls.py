@@ -4,7 +4,7 @@ from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.urls import path
 
-from core.views import dashboard, log_event, get_adaptation, validator_view, api_equipment_status, api_equipment_control
+from core.views import dashboard, log_event, get_adaptation, validator_view, api_equipment_status, api_equipment_control, stats_view
 
 
 urlpatterns = [
@@ -17,6 +17,7 @@ urlpatterns = [
     path('validator/', validator_view, name='validator'),
     path('api/equipment/', api_equipment_status, name='api_equipment'),
     path('api/equipment/control/', api_equipment_control, name='api_equipment_control'),
+    path('stats/', stats_view, name='stats'),
 ]
 
 # В режиме разработки Django сам отдаёт статику

@@ -297,4 +297,39 @@ body {
 .danger-bar { background: #ef4444 !important; }
 .reactor.danger .reactor-core { background: #ef4444; box-shadow: 0 0 30px #ef4444; }
 
-/* Скрываем старые стили логина и валидатора, чтобы не мешали (они у нас отдельно) */
+@keyframes spin {
+    100% { transform: rotate(360deg); }
+}
+
+.pump.working .pump-blades {
+    animation: spin 1s linear infinite;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.stat-card {
+    background: #0f172a;
+    border: 1px solid #334155;
+    border-radius: 4px;
+    padding: 20px;
+    text-align: center;
+}
+
+.stat-value {
+    font-size: 36px;
+    font-weight: bold;
+    color: #38bdf8;
+    margin-bottom: 8px;
+}
+
+.stat-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    color: #94a3b8;
+    letter-spacing: 1px;
+}
