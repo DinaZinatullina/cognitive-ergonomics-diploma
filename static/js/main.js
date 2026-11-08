@@ -8,10 +8,8 @@
     // CSRF-токен из data-атрибута body
     const csrfToken = document.body.dataset.csrfToken;
 
-    // Состояние системы (для определения ошибок)
+    // Состояние системы
     const state = {
-        isRunning: false,
-        sessionStart: Date.now(),
         lastActionAt: Date.now(),
     };
 
@@ -44,7 +42,7 @@
         fetch('/api/equipment/')
             .then(r => r.json())
             .then(data => {
-                // 1. Находим элементы (по новым ID)
+                // 1. Находим элементы
                 const tempEl = document.getElementById('val-temp');
                 const pressureEl = document.getElementById('val-pressure');
                 const levelEl = document.getElementById('mnemonic-level');
@@ -67,15 +65,13 @@
                 // 3. Двигаем воду в баке и полоски
                 tankFluidEl.style.height = data.tank_level + '%';
                 
-                // Температура: макс 120°C
                 const tempPercent = Math.min((data.temperature / 120) * 100, 100);
                 document.getElementById('bar-temp').style.width = tempPercent + '%';
                 
-                // Давление: макс 4 атм
                 const pressPercent = Math.min((data.pressure / 4.0) * 100, 100);
                 document.getElementById('bar-pressure').style.width = pressPercent + '%';
 
-                // 4. Обработка аварий (красный цвет)
+                // 5. Обработка аварий
                 let isAlarm = false;
 
                 if (data.is_temperature_critical) {
@@ -98,34 +94,49 @@
                     document.getElementById('bar-pressure').classList.remove('danger-bar');
                 }
 
-                // 5. Аварийный баннер
+                // 6. Статус и предупреждения
                 if (isAlarm) {
+                    // КРИТИЧЕСКАЯ АВАРИЯ
                     alarmEl.style.display = 'flex';
                     statusEl.innerHTML = '<span class="status-dot" style="background:#ef4444; box-shadow:0 0 8px #ef4444;"></span> АВАРИЯ';
                     statusEl.style.color = '#ef4444';
+                    reactorEl.style.borderColor = '#ef4444'; // Красная рамка
                     
-                    if (data.is_pump_working) {
-                        pumpEl.classList.add('working');
-                    } else {
-                        pumpEl.classList.remove('working');
-                    }
-                
                     if (!window._alarmSent) {
                         sendEvent('alert', 'критическое_отклонение', null);
                         addLog('Критическое отклонение параметров!', 'danger');
                         window._alarmSent = true;
                     }
+                } else if (data.is_predictive_warning) {
+                    // ПРЕДИКТИВНОЕ ПРЕДУПРЕЖДЕНИЕ (рост параметров)
+                    alarmEl.style.display = 'none';
+                    statusEl.innerHTML = '<span class="status-dot" style="background:#fbbf24; box-shadow:0 0 8px #fbbf24;"></span> ВНИМАНИЕ: РОСТ ПАРАМЕТРОВ';
+                    reactorEl.style.borderColor = '#fbbf24';
+                    window._alarmSent = false;
                 } else {
+                    // НОРМА
                     alarmEl.style.display = 'none';
                     statusEl.innerHTML = '<span class="status-dot"></span> СИСТЕМА В НОРМЕ';
                     statusEl.style.color = '#4ade80';
+                    reactorEl.style.borderColor = '#475569';
                     window._alarmSent = false;
+                }
+
+                // 7. Логика авто-защиты
+                if (data.is_auto_protected) {
+                    if (!window._autoProtectSent) {
+                        addLog('СИСТЕМА ВЗЯЛА УПРАВЛЕНИЕ: Аварийный сброс!', 'danger');
+                        sendEvent('system_action', 'auto_protection', null);
+                        window._autoProtectSent = true;
+                    }
+                } else {
+                    window._autoProtectSent = false;
                 }
             })
             .catch(err => console.warn('Ошибка получения данных установки:', err));
     }
 
-    // Функция для добавления записи в журнал на экране
+    // Функция для добавления записи в журнал
     function addLog(text, type) {
         const logContainer = document.getElementById('scada-log');
         if (!logContainer) return;
@@ -141,7 +152,7 @@
     }
 
     // ============================================================
-    // Обработка нажатий на кнопки управления
+    // Обработка кнопок управления
     // ============================================================
     function setupControlButtons() {
         const controlButtons = document.querySelectorAll('.control-buttons .scada-btn');
@@ -151,10 +162,8 @@
                 const action = button.dataset.action;
                 const reactionTime = Date.now() - state.lastActionAt;
                 
-                // Отправляем событие в систему аналитики
                 sendEvent('click', 'control_' + action, reactionTime);
                 
-                // Отправляем команду на сервер для изменения параметров
                 fetch('/api/equipment/control/', {
                     method: 'POST',
                     headers: {
@@ -166,7 +175,7 @@
                 .then(r => r.json())
                 .then(data => {
                     if (data.ok) {
-                        addLog('Команда выполнена: ' + button.textContent.trim(), 'info');
+                        addLog('Команда: ' + button.textContent.trim(), 'info');
                     }
                 })
                 .catch(err => console.warn('Ошибка управления:', err));
@@ -177,7 +186,7 @@
     }
 
     // ============================================================
-    // Применение правил адаптации
+    // Адаптация интерфейса
     // ============================================================
     function fetchAdaptation() {
         fetch('/api/adaptation/')
@@ -213,28 +222,20 @@
     }
 
     // ============================================================
-    // Запуск всех процессов после загрузки DOM
+    // Запуск
     // ============================================================
     document.addEventListener('DOMContentLoaded', function () {
-        // Проверяем, на странице ли мы оператора
         if (document.getElementById('val-temp')) {
-            // Запускаем опрос датчиков каждые 2 секунды
             setInterval(fetchEquipmentStatus, 2000);
             fetchEquipmentStatus();
-            
-            // Настраиваем кнопки
             setupControlButtons();
-            
-            // Запускаем опрос адаптации
             setInterval(fetchAdaptation, 5000);
         }
 
-        // Обновляем время последнего действия при клике в любом месте
         document.addEventListener('click', function () {
             state.lastActionAt = Date.now();
         });
         
-        // Отслеживаем idle (простой)
         setInterval(function () {
             const idleSeconds = Math.floor((Date.now() - state.lastActionAt) / 1000);
             if (idleSeconds >= 30 && idleSeconds % 30 === 0) {

@@ -168,12 +168,13 @@ body {
     border-top-color: transparent;
 }
 
-/* Анимация только когда насос реально работает */
-.pump.working .pump-blades {
-    animation: spin 1s linear infinite;
+@keyframes spin {
+    100% { transform: rotate(360deg); }
 }
 
-@keyframes spin { 100% { transform: rotate(360deg); } }
+.pump.working .pump-blades {
+    animation: spin 1s linear infinite !important;
+}
 
 /* Реактор */
 .reactor {
@@ -332,4 +333,9 @@ body {
     text-transform: uppercase;
     color: #94a3b8;
     letter-spacing: 1px;
+}
+
+.reactor.warning {
+    border-color: #fbbf24 !important;
+    box-shadow: 0 0 15px rgba(251, 191, 36, 0.5);
 }

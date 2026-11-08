@@ -2,7 +2,7 @@ from django.contrib import admin
 from .models import (
     Role, UserProfile,
     ContentType, Content, HeavyWord, ValidationRule, ContentValidation,
-    Session, Event, SessionMetrics, AdaptationRule, AdaptationLog,
+    Session, Event, SessionMetrics, AdaptationRule, AdaptationLog, EquipmentState,
 )
 
 
@@ -72,3 +72,7 @@ class AdaptationRuleAdmin(admin.ModelAdmin):
 @admin.register(AdaptationLog)
 class AdaptationLogAdmin(admin.ModelAdmin):
     list_display = ('session', 'rule', 'triggered_at')
+
+@admin.register(EquipmentState)
+class EquipmentStateAdmin(admin.ModelAdmin):
+    list_display = ('id', 'temperature', 'pressure', 'tank_level', 'updated_at')    

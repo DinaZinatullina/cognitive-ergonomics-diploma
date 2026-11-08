@@ -104,7 +104,7 @@ from .simulator import tick_equipment
 @login_required
 def api_equipment_status(request):
     """Возвращает текущее состояние установки и делает шаг симуляции."""
-    state = tick_equipment()
+    state, is_predictive_warning = tick_equipment()
     
     return JsonResponse({
         'temperature': round(state.temperature, 1),
@@ -112,6 +112,9 @@ def api_equipment_status(request):
         'tank_level': round(state.tank_level, 1),
         'is_temperature_critical': state.is_temperature_critical,
         'is_pressure_critical': state.is_pressure_critical,
+        'is_pump_working': not (state.is_temperature_critical or state.is_pressure_critical) and state.tank_level > 5,
+        'is_predictive_warning': is_predictive_warning,  # <--- НОВОЕ
+        'is_auto_protected': state.is_auto_protected,    # <--- НОВОЕ
     })
 
 import json
