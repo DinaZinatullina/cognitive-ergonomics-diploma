@@ -112,3 +112,51 @@ def api_equipment_status(request):
         'is_temperature_critical': state.is_temperature_critical,
         'is_pressure_critical': state.is_pressure_critical,
     })
+
+import json
+from django.views.decorators.http import require_POST
+
+@login_required
+@require_POST
+def api_equipment_control(request):
+    """Обрабатывает команды оператора по управлению установкой."""
+    try:
+        data = json.loads(request.body)
+    except json.JSONDecodeError:
+        return JsonResponse({'ok': False, 'error': 'invalid json'}, status=400)
+
+    action = data.get('action')
+    
+    # Получаем текущее состояние
+    state, _ = EquipmentState.objects.get_or_create(id=1)
+    
+    # Применяем действие
+    if action == 'coolant':
+        # Хладагент резко сбрасывает температуру
+        state.temperature -= 15.0
+        if state.temperature < 20: state.temperature = 20
+    elif action == 'vent':
+        # Сброс давления
+        state.pressure -= 0.5
+        if state.pressure < 1.0: state.pressure = 1.0
+    elif action == 'fill':
+        # Долив жидкости
+        state.tank_level += 20.0
+        if state.tank_level > 100: state.tank_level = 100
+    else:
+        return JsonResponse({'ok': False, 'error': 'unknown action'}, status=400)
+
+    # Пересчитываем аварийные флаги
+    state.is_temperature_critical = state.temperature >= 95.0
+    state.is_pressure_critical = state.pressure >= 3.0
+    state.save()
+
+    return JsonResponse({
+        'temperature': round(state.temperature, 1),
+        'pressure': round(state.pressure, 2),
+        'tank_level': round(state.tank_level, 1),
+        'is_temperature_critical': state.is_temperature_critical,
+        'is_pressure_critical': state.is_pressure_critical,
+        # Насос работает, если нет аварии и уровень жидкости больше 5%
+        'is_pump_working': not (state.is_temperature_critical or state.is_pressure_critical) and state.tank_level > 5,
+    })

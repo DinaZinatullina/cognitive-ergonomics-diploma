@@ -53,6 +53,7 @@
                 const alarmEl = document.getElementById('alarm-panel');
                 const reactorEl = document.getElementById('reactor-icon');
                 const statusEl = document.getElementById('system-status');
+                const pumpEl = document.getElementById('pump-icon');
 
                 // Если элементов нет (мы на другой странице), выходим
                 if (!tempEl || !levelEl) return;
@@ -103,6 +104,12 @@
                     statusEl.innerHTML = '<span class="status-dot" style="background:#ef4444; box-shadow:0 0 8px #ef4444;"></span> АВАРИЯ';
                     statusEl.style.color = '#ef4444';
                     
+                    if (data.is_pump_working) {
+                        pumpEl.classList.add('working');
+                    } else {
+                        pumpEl.classList.remove('working');
+                    }
+                
                     if (!window._alarmSent) {
                         sendEvent('alert', 'критическое_отклонение', null);
                         addLog('Критическое отклонение параметров!', 'danger');
@@ -144,9 +151,26 @@
                 const action = button.dataset.action;
                 const reactionTime = Date.now() - state.lastActionAt;
                 
+                // Отправляем событие в систему аналитики
                 sendEvent('click', 'control_' + action, reactionTime);
-                addLog('Команда: ' + button.textContent.trim(), 'info');
                 
+                // Отправляем команду на сервер для изменения параметров
+                fetch('/api/equipment/control/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrfToken,
+                    },
+                    body: JSON.stringify({ action: action }),
+                })
+                .then(r => r.json())
+                .then(data => {
+                    if (data.ok) {
+                        addLog('Команда выполнена: ' + button.textContent.trim(), 'info');
+                    }
+                })
+                .catch(err => console.warn('Ошибка управления:', err));
+
                 state.lastActionAt = Date.now();
             });
         });
