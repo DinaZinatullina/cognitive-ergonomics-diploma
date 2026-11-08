@@ -93,6 +93,16 @@
                     pressureEl.classList.remove('danger-text');
                     document.getElementById('bar-pressure').classList.remove('danger-bar');
                 }
+                                // Управление потоком в трубе
+                const pipeFlow = document.getElementById('pipe-flow');
+                if (pipeFlow) {
+                    // Если насос должен работать (нет аварии и есть вода) — показываем поток
+                    if (data.is_pump_working) {
+                        pipeFlow.style.display = 'block';
+                    } else {
+                        pipeFlow.style.display = 'none';
+                    }
+                }
 
                 // 6. Статус и предупреждения
                 if (isAlarm) {
