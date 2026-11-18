@@ -90,8 +90,15 @@
             <div class="scada-panel log-panel">
                 <div class="panel-title">Журнал событий</div>
                 <div class="scada-log" id="scada-log">
-                    <div class="log-entry system">[10:00] Система инициализирована</div>
-                    <div class="log-entry info">[10:01] Мониторинг запущен</div>
+                    <!-- Выводим сообщение от администратора (если есть) -->
+                    {% if last_message %}
+                        <div class="log-entry info" style="border-left: 3px solid #38bdf8; padding-left: 8px;">
+                            <strong>[СООБЩЕНИЕ]</strong> {{ last_message.clean_text }}
+                        </div>
+                    {% else %}
+                        <div class="log-entry system">[10:00] Система инициализирована</div>
+                    {% endif %}
+                    <div class="log-entry system">[10:01] Мониторинг запущен</div>
                 </div>
             </div>
         </div>

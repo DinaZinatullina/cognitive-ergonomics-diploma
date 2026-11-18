@@ -7,26 +7,54 @@ from django.views.decorators.http import require_POST
 
 from .models import Event, Session
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
-from .validation import validate_text
+from django.shortcuts import render, redirect
+from .validation import validate_and_clean_text
 
 from .models import SessionMetrics, Event, Session
+
+from .models import OperatorMessage
 
 @login_required
 def dashboard(request):
     """Главный экран оператора."""
-    # Тестовый текст, который мы выводим в лог
-    test_event_text = "Осуществление процесса функционирования системы является важным этапом."
+    # Представь, что этот текст пришел от внешней системы (например, из SCADA)
+    raw_text = "Осуществление процесса функционирования системы является важным этапом."
     
-    # Валидируем его
-    validation_result = validate_text(test_event_text)
-
+    # Система ПРОПУСКАЕТ его через валидатор и ОЧИЩАЕТ
+    validation_result = validate_and_clean_text(raw_text)
+    
+    # В шаблон мы передаем УЖЕ ОЧИЩЕННЫЙ текст
     context = {
         'validation': validation_result,
-        'log_text': test_event_text,
+        'clean_log_text': validation_result['clean_text'], # Очищенный текст для отображения
+    }
+    
+    last_message = OperatorMessage.objects.order_by('-created_at').first()
+    
+    context = {
+        'last_message': last_message,
     }
     return render(request, 'operator/dashboard.html', context)
 
+
+@login_required
+def send_message(request):
+    """Страница администратора для отправки сообщений оператору."""
+    if request.method == 'POST':
+        raw = request.POST.get('message', '')
+        if raw:
+            # Валидируем и чистим
+            result = validate_and_clean_text(raw)
+            
+            # Сохраняем в базу
+            OperatorMessage.objects.create(
+                raw_text=raw,
+                clean_text=result['clean_text'],
+                is_valid=result['is_passed']
+            )
+            return redirect('dashboard') # После отправки кидаем на пульт
+
+    return render(request, 'operator/send_message.html')
 
 @require_POST
 @login_required

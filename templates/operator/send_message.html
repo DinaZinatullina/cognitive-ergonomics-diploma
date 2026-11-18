@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}Отправка сообщения{% endblock %}
+
+{% block content %}
+<div class="scada-dashboard">
+    <div class="scada-panel">
+        <div class="panel-title">Отправка сообщения оператору</div>
+        <form method="post" style="display: flex; flex-direction: column; gap: 16px;">
+            {% csrf_token %}
+            <textarea name="message" rows="5" placeholder="Введите текст сообщения..." style="padding: 12px; background: #0f172a; color: #fff; border: 1px solid #334155; border-radius: 4px; font-family: monospace;"></textarea>
+            <button type="submit" class="scada-btn">Отправить (с валидацией)</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

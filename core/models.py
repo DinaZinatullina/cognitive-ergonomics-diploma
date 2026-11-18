@@ -174,3 +174,13 @@ class EquipmentState(models.Model):
 
     def __str__(self):
         return f"Т: {self.temperature}°C, Д: {self.pressure} атм, Уровень: {self.tank_level}%"
+
+class OperatorMessage(models.Model):
+    """Сообщения, которые отправляются оператору (от админа или системы)."""
+    raw_text = models.TextField(help_text="Исходный текст (как написал админ)")
+    clean_text = models.TextField(blank=True, help_text="Очищенный текст (после валидации)")
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_valid = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.clean_text[:50]
